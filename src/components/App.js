@@ -1,6 +1,6 @@
 import Header from "./Header"
 import PetPage from "./PetPage"
-import {useState} from "react"
+import {useState, useEffect} from "react"
 
 function App() {
 
@@ -8,6 +8,14 @@ function App() {
   const [formData, setFormData] = useState({})
 
   const [pets, setPets] = useState([])
+
+  useEffect(() => {
+    fetch('http://localhost:4000/pets')
+    .then(response => response.json())
+    .then(petData => {
+      setPets(petData)
+    })
+  }, [])
 
   const filteredPets = pets.filter(pet => {
     if(searchText === ""){
@@ -17,15 +25,34 @@ function App() {
   })
 
   function adoptPet(id){
-    setPets(pets.filter(pet => {
-      return pet.id !== id
-    }))
+    fetch(`http://localhost:4000/pets/${id}`, {
+      method: "DELETE"
+    })
+    .then(response => {
+      if(response.ok){
+        setPets(pets.filter(pet => {
+          return pet.id !== id
+        }))
+      }
+    })
   }
 
   function addPet(event){
     event.preventDefault()
 
-    setPets([...pets, {id: pets.length + 1, ...formData}])
+    // setPets([...pets, {id: pets.length + 1, ...formData}])
+    // console.log(formData)
+
+    fetch('http://localhost:4000/pets', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(newPet => setPets([...pets, newPet]))
   }
 
   function updateFormData(event){
