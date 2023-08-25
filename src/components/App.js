@@ -25,16 +25,9 @@ function App() {
   })
 
   function adoptPet(id){
-    fetch(`http://localhost:4000/pets/${id}`, {
-      method: "DELETE"
-    })
-    .then(response => {
-      if(response.ok){
-        setPets(pets.filter(pet => {
-          return pet.id !== id
-        }))
-      }
-    })
+    setPets(pets.filter(pet => {
+      return pet.id !== id
+    }))
   }
 
   function addPet(event){
