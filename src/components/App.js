@@ -1,6 +1,6 @@
 import Header from "./Header"
 import PetPage from "./PetPage"
-import {useState} from "react"
+import {useState, useEffect} from "react"
 
 function App() {
 
@@ -8,6 +8,14 @@ function App() {
   const [formData, setFormData] = useState({})
 
   const [pets, setPets] = useState([])
+
+  useEffect(() => {
+    fetch('http://localhost:8000/pets')
+    .then(response => response.json())
+    .then((petData) => {
+      setPets(petData)
+    })
+  }, [])
 
   const filteredPets = pets.filter(pet => {
     if(searchText === ""){
@@ -29,7 +37,24 @@ function App() {
   function addPet(event){
     event.preventDefault()
 
-    setPets([...pets, {id: pets.length + 1, ...formData}])
+    // setPets([...pets, {id: pets.length + 1, ...formData}])
+
+    fetch('http://localhost:8000/pets', {
+      method: "POST",
+      headers: {
+        'Content-Type': "application/json",
+        'Accept': "application/json"
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      if(response.ok){
+        response.json().then(newPet => {
+          setPets([...pets, newPet])
+          event.target.reset()
+        })
+      }
+    })
   }
 
   function updateFormData(event){
