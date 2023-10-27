@@ -16,6 +16,10 @@ function App() {
     return pet.name.toUpperCase().includes(searchText.toUpperCase())
   })
 
+  function updateSearchText(event){
+    setSearchText(event.target.value)
+  }
+
   function adoptPet(id){
     setPets(pets.filter(pet => {
       return pet.id !== id
@@ -35,7 +39,7 @@ function App() {
   return (
     <div className="app">
       <Header />
-      <PetPage pets={filteredPets} setSearchText={setSearchText} adoptPet={adoptPet} addPet={addPet} updateFormData={updateFormData} />
+      <PetPage pets={filteredPets} updateSearchText={updateSearchText} adoptPet={adoptPet} addPet={addPet} updateFormData={updateFormData} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-function Search({setSearchText}){
+function Search({updateSearchText}){
     return (
         <div className="searchbar">
             <label htmlFor="search">Search Pets:</label>
@@ -6,9 +6,7 @@ function Search({setSearchText}){
                 type="text"
                 id="search"
                 placeholder="Type a name to search..."
-                onChange={(event) => {
-                    setSearchText(event.target.value)
-                }}
+                onChange={updateSearchText}
             />
         </div>
     )
